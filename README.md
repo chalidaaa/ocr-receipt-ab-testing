@@ -28,7 +28,6 @@ Fitur:
 ocr-receipt-ab-testing/
 ├── app.py              # aplikasi Streamlit (entrypoint)
 ├── requirements.txt    # dependency Python
-├── packages.txt        # dependency sistem (Streamlit Cloud / Linux)
 ├── runtime.txt         # versi Python target
 ├── README.md
 └── .gitignore
@@ -79,4 +78,49 @@ Buka URL yang muncul di terminal (default `http://localhost:8501`).
 > ```powershell
 > .\.venv\Scripts\Activate.ps1
 > ```
+
+---
+
+## � Push perubahan ke GitHub
+
+Repo sudah ada di https://github.com/chalidaaa/ocr-receipt-ab-testing.
+Setiap kali ada perubahan kode, jalankan dari folder project:
+
+```powershell
+git add .
+git commit -m "deskripsi perubahan"
+git push
+```
+
+---
+
+## ☁️ Deploy ke Streamlit Community Cloud
+
+1. Login di https://share.streamlit.io pakai akun GitHub.
+2. Klik **New app**, lalu isi:
+   - **Repository**: `chalidaaa/ocr-receipt-ab-testing`
+   - **Branch**: `main`
+   - **Main file path**: `app.py`
+3. Klik **Deploy** dan tunggu build (3–6 menit untuk first build karena
+   harus download PyTorch + EasyOCR).
+
+Setiap `git push` ke `main` akan otomatis re-deploy. Bagikan URL app ke
+teman dan mereka tinggal upload struk lewat browser.
+
+---
+
+## 🛠️ Troubleshooting
+
+| Masalah | Solusi |
+|---|---|
+| `streamlit : The term 'streamlit' is not recognized` | venv belum aktif. Jalankan `.\.venv\Scripts\Activate.ps1` dulu. |
+| `ImportError: libGL.so.1` saat deploy | Pastikan `requirements.txt` pakai `opencv-python-headless` (bukan `opencv-python`). |
+| `libglib2.0-0 : Depends: libffi7` saat deploy | Hapus file `packages.txt`. `opencv-python-headless` tidak butuh apt deps di image Streamlit Cloud terbaru. |
+| Build timeout di Streamlit Cloud | Klik **Reboot app** dari dashboard. Build pertama memang lambat. |
+| Port 8501 sudah dipakai di lokal | `streamlit run app.py --server.port 8502` |
+
+---
+
+## 👤 Author
+
 [@chalidaaa](https://github.com/chalidaaa)
